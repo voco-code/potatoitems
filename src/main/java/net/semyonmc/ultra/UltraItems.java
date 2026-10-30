@@ -10,6 +10,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -138,6 +141,7 @@ public final class UltraItems {
 				output.accept(ULTRA_CHESTPLATE);
 				output.accept(ULTRA_LEGGINGS);
 				output.accept(ULTRA_BOOTS);
+				output.accept(rainbowPotion());
 			})
 			.build();
 
@@ -148,6 +152,15 @@ public final class UltraItems {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, UltraMod.id(name));
 		T item = factory.apply(props.setId(key));
 		return Registry.register(BuiltInRegistries.ITEM, key, item);
+	}
+
+	/** Зелье «Защита радуги» (3 минуты) — обычное зелье с нашим эффектом. */
+	public static ItemStack rainbowPotion() {
+		ItemStack stack = new ItemStack(Items.POTION);
+		stack.set(DataComponents.POTION_CONTENTS,
+				PotionContents.EMPTY.withEffectAdded(new MobEffectInstance(UltraEffects.RAINBOW_PROTECTION, 3600, 0)));
+		stack.set(DataComponents.CUSTOM_NAME, Component.literal("Зелье защиты радуги"));
+		return stack;
 	}
 
 	public static boolean isSoulArmor(ItemStack stack) {
@@ -176,6 +189,8 @@ public final class UltraItems {
 			entries.accept(ULTRA_SHOVEL);
 			entries.accept(ULTRA_HOE);
 		});
+		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FOOD_AND_DRINKS)
+				.register(entries -> entries.accept(rainbowPotion()));
 		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
 				.register(entries -> entries.accept(ULTRA_DIAMOND));
 		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.NATURAL_BLOCKS)
