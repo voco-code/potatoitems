@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "ultra:soul_eater"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "ultra:soul_eater"
+      }
+    ]
+  }
+}
